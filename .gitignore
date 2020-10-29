@@ -1,0 +1,16 @@
+# gitignore for kaggle ieee fraud detection challenge
+
+data/*
+output/predictions/*
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+pyscripts/__pycache__/*
+.idea/*
+.vscode/*
+
+venv/*
