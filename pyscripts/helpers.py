@@ -8,6 +8,9 @@ import functools
 
 
 def import_export(path, import_func, *dargs, **dkwargs):
+    """ Decorator generator for importing if result of a function already exists
+        and exporting it if it does not.
+    """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -24,6 +27,9 @@ def import_export(path, import_func, *dargs, **dkwargs):
 
 
 def time_execution(func):
+    """ A decorator to time a functions execution.
+        The result is only a print stating running time in minutes.
+    """
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
         start_time = time.perf_counter()
@@ -36,6 +42,9 @@ def time_execution(func):
 
 
 def add_method(cls):
+    """ A decorator that adds a function as a method to an existing class.
+        NB: Existing to the module in which the function is being defined.
+    """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
