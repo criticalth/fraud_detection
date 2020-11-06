@@ -9,7 +9,6 @@ from sklearn.metrics import log_loss as loss
 
 # In-project development
 import pyscripts.object_enrichment
-from pyscripts.helpers import add_method
 
 
 class FraudEvaluator:
@@ -19,17 +18,26 @@ class FraudEvaluator:
         self.grouped_perf = None
         self.model = model
 
-    def calc_perf(self, y_dev, y_dev_hat, y_val, y_val_hat):
+    def calc_perf(self, y_dev, x_dev, y_val, x_val):
+        """ Main method to calculate performance measures. Blueprint for project
+            fraud model evaluation, ensuring comparability between models.
+
+        :param y_dev: array-like, development target
+        :param y_dev_hat: array-like, development target predictions
+        :param y_val: array-like, validation target
+        :param y_val_hat: array-like, validation target predictions
+        :return: None """
+
+        y_dev_hat = self.model.predict(x_dev)
+        y_val_hat = self.model.predict(x_val)
+
         self.metric_perf = self.calc_metrics(y_dev, y_dev_hat, y_val, y_val_hat)
         self.binned_perf = self.calc_groups(y_dev, y_dev_hat, y_val, y_val_hat)
 
     def export(self):
         pass
 
-    def calc_metrics(self, y_dev, x_dev, y_val, x_val):
-
-        y_dev_hat = self.model.predict(x_dev)
-        y_val_hat = self.model.predict(x_val)
+    def calc_metrics(self, y_dev, y_dev_hat, y_val, y_val_hat):
 
         return \
             pd.DataFrame({
