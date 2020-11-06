@@ -10,20 +10,31 @@ import functools
 # In-project development
 
 
-def import_export(path, import_func, *dargs, **dkwargs):
+def import_export(file,
+        import_func=None, import_specs=dict(),
+        export_func=None, export_specs=dict()
+    ):
     """ Decorator generator for importing if result of a function already exists
         and exporting it if it does not.
+
+    :param file: str, output file to save results or import from
+    :param import_func: function, import function
+    :param import_specs: tuple of args, additional import function arguments
+    :param export_func: function, export function
+    :param export_specs: tuple of args, additional export function arguments
+    :return: decorator
     """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            if os.path.isfile(path):
-                print("Extract cache with function {}!".format(func.__name__))
-                return import_func(*dargs, **dkwargs)
+            if os.path.isfile(file):
+                print(f"Extract cache with function {func.__name__!r}!")
+                return import_func(file, **import_specs)
             else:
-                print("Executing original function {}!".format(func.__name__))
+                print(f"Execute original function {func.__name__!r}!")
                 res = func(*args, **kwargs)
-                res.to_csv(path, index=False)
+                print(f"Export results from function {func.__name__!r}!")
+                export_func(res, file, **export_specs)
                 return res
         return wrapper
     return decorator
