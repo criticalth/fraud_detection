@@ -28,8 +28,8 @@ def obtain_prepped_data(trans_train, trans_test, ident_train, ident_test):
     # 5) for all other variables - simply impute with their mean.
     return \
         pd.concat([
-            trans_train.assign(sample="dev"),
-            trans_test.assign(sample="val")
+            trans_train.assign(sample="train"),
+            trans_test.assign(sample="test")
         ]). \
         merge(
             pd.concat([
