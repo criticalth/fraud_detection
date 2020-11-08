@@ -1,5 +1,6 @@
 # Libraries
 # Built-ins
+from functools import reduce, partial
 
 # Third-party developed
 import pandas as pd
@@ -47,7 +48,24 @@ class FraudEvaluator:
             }). \
             apply(lambda x: [round(y, 4) for y in x]). \
             assign(sample=["dev", "val"], index=["i", "i"]). \
-            pivoting(index=["index"], columns=["sample"])
+            pivoting(index=["index"], columns=["sample"]). \
+            assign(model_type=self.model.__class__.__name__)
 
     def calc_groups(self, y_dev, y_dev_hat, y_val, y_val_hat):
         pass
+
+
+def evaluate_single_model(model, y_dev, x_dev, y_val, x_val):
+
+    res = FraudEvaluator(model)
+    res.calc_perf(y_dev, x_dev, y_val, x_val)
+
+    return res.metric_perf
+
+
+def eval_models(models_list, **mkwargs):
+
+    res = map(partial(evaluate_single_model, **mkwargs), models_list)
+    res = reduce(lambda df1, df2: pd.concat([df1, df2]), res)
+
+    return res
